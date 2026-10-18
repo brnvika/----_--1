@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light">
+    <title>Wishlist — список желаний</title>
+
+    <style>
+        :root {
+            --background: #f5f6fb;
+            --surface: #fff;
+            --text: #202438;
+            --muted: #697087;
+            --border: #e4e7f0;
+            --primary: #6855df;
+            --primary-hover: #5542c7;
+            --success: #16764b;
+            --danger: #bd3442;
+            --radius: 18px;
+        }
+
+        * { box-sizing: border-box; }
+        [hidden] { display: none !important; }
+
+        body {
+            margin: 0;
+            background: var(--background);
+            color: var(--text);
+            font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+            line-height: 1.5;
+        }
+
+        button, input { font: inherit; }
+        button, a, input { -webkit-tap-highlight-color: transparent; }
+
+        :focus-visible {
+            outline: 3px solid #a99aff;
+            outline-offset: 3px;
+        }
+
+        .container {
+            width: min(1120px, calc(100% - 32px));
+            margin: 40px auto;
+        }
+
+        .page-header { margin-bottom: 28px; }
+
+        .eyebrow {
+            margin: 0 0 4px;
+            color: var(--primary);
+            font-size: .8rem;
+            font-weight: 800;
+            letter-spacing: .15em;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            letter-spacing: -.04em;
+        }
+
+        .subtitle { margin: 8px 0 0; color: var(--muted); }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 320px minmax(0, 1fr);
+            align-items: start;
+            gap: 24px;
+        }
+
+        .panel, .wish-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: 0 6px 24px rgb(32 36 56 / 4%);
+        }
+
+        .panel { padding: 24px; }
+        .panel h2 { margin: 0 0 20px; font-size: 1.2rem; }
+
+        fieldset {
+            min-width: 0;
+            margin: 0;
+            padding: 0;
+            border: 0;
+        }
+
+        .field { margin-bottom: 18px; }
+
+        .field label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: .9rem;
+            font-weight: 600;
+        }
+
+        .field input {
+            display: block;
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid #ccd1df;
+            border-radius: 10px;
+            background: #fff;
+            color: var(--text);
+        }
+
+        .hint {
+            display: block;
+            margin-top: 5px;
+            color: var(--muted);
+            font-size: .78rem;
+        }
+
+        .checkbox {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin: 4px 0 22px;
+            cursor: pointer;
+        }
+
+        .checkbox input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 42px;
+            padding: 9px 15px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: #fff;
+            color: var(--text);
+            font-weight: 600;
+            cursor: pointer;
+            transition: background .15s, border-color .15s;
+        }
+
+        .button:hover { background: #f0f1f7; }
+
+        .button-primary {
+            width: 100%;
+            border-color: var(--primary);
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .button-primary:hover {
+            border-color: var(--primary-hover);
+            background: var(--primary-hover);
+        }
+
+        .button-danger { border-color: #f1d4d8; color: var(--danger); }
+        .button-danger:hover { background: #fff0f1; }
+        button:disabled { opacity: .55; cursor: wait; }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+
+        .stat {
+            padding: 15px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: #fff;
+        }
+
+        .stat strong { display: block; font-size: 1.6rem; }
+        .stat span { color: var(--muted); font-size: .8rem; }
+
+        .list-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .list-header h2 { margin: 0; font-size: 1.2rem; }
+
+        .notice {
+            margin: 0 0 20px;
+            padding: 13px 16px;
+            border: 1px solid #bce3ce;
+            border-radius: 12px;
+            background: #edf9f2;
+            color: var(--success);
+            overflow-wrap: anywhere;
+        }
+
+        .notice.error {
+            border-color: #f0c4cb;
+            background: #fff0f2;
+            color: #a32537;
+        }
+
+        .loading {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            color: var(--muted);
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid #ded9f8;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin .8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .wish-list { display: grid; gap: 14px; }
+        .wish-card { min-width: 0; padding: 20px; }
+        .wish-card.bought { border-color: #c4e5d1; background: #f7fcf9; }
+
+        .wish-heading {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .wish-title { margin: 0; font-size: 1.1rem; overflow-wrap: anywhere; }
+        .bought .wish-title { color: var(--muted); text-decoration: line-through; }
+
+        .badge {
+            flex-shrink: 0;
+            padding: 4px 9px;
+            border-radius: 20px;
+            background: #efecff;
+            color: #5945c1;
+            font-size: .75rem;
+            font-weight: 600;
+        }
+
+        .bought .badge { background: #ddf2e5; color: var(--success); }
+
+        .wish-link {
+            display: inline-block;
+            margin: 10px 0 14px;
+            color: var(--primary);
+            text-underline-offset: 3px;
+            overflow-wrap: anywhere;
+        }
+
+        .wish-link[aria-disabled="true"] { color: var(--muted); }
+
+        .wish-details {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .wish-price { font-size: 1.25rem; font-weight: 750; }
+        .wish-date { color: var(--muted); font-size: .8rem; }
+
+        .wish-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .empty {
+            padding: 42px 24px;
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            text-align: center;
+            color: var(--muted);
+        }
+
+        .empty strong {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--text);
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 800px) {
+            .layout { grid-template-columns: 1fr; }
+            .container { margin-top: 24px; }
+        }
+
+        @media (max-width: 480px) {
+            .panel, .wish-card { padding: 18px; }
+            .stat { padding: 12px; }
+            .wish-heading { flex-direction: column; gap: 8px; }
+            .wish-actions .button { flex: 1; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .spinner { animation: none; }
+            .button { transition: none; }
+        }
+    </style>
+</head>
+
+<body>
+<main class="container">
+    <header class="page-header">
+        <p class="eyebrow">WISHLIST</p>
+        <h1>Мои желания</h1>
+        <p class="subtitle">Сохраняйте идеи и отмечайте исполненные желания.</p>
+    </header>
+
+    <p id="notice" class="notice" role="status" aria-live="polite" hidden></p>
+
+    <div class="layout">
+        <section class="panel" aria-labelledby="form-title">
+            <h2 id="form-title">Новое желание</h2>
+            <form id="wish-form">
+                <fieldset id="form-fields">
+                    <div class="field">
+                        <label for="title">Название</label>
+                        <input id="title" name="title" type="text"
+                               placeholder="Например, наушники" maxlength="200" required>
+                    </div>
+                    <div class="field">
+                        <label for="link">Ссылка</label>
+                        <input id="link" name="link" type="url"
+                               placeholder="https://example.com/product" maxlength="2048"
+                               aria-describedby="link-hint" required>
+                        <small id="link-hint" class="hint">
+                            Полная ссылка, начинающаяся с https:// или http://
+                        </small>
+                    </div>
+                    <div class="field">
+                        <label for="price">Цена, ₽</label>
+                        <input id="price" name="price" type="number"
+                               min="0" step="0.01" inputmode="decimal" placeholder="0.00" required>
+                    </div>
+                    <label class="checkbox" for="is-bought">
+                        <input id="is-bought" name="isBought" type="checkbox">
+                        Уже куплено
+                    </label>
+                    <button class="button button-primary" type="submit">Добавить желание</button>
+                </fieldset>
+            </form>
+        </section>
+
+        <section aria-labelledby="list-title">
+            <div class="stats">
+                <div class="stat">
+                    <strong id="total-count">—</strong>
+                    <span>Всего желаний</span>
+                </div>
+                <div class="stat">
+                    <strong id="active-count">—</strong>
+                    <span>Не куплено</span>
+                </div>
+                <div class="stat">
+                    <strong id="bought-count">—</strong>
+                    <span>Куплено</span>
+                </div>
+            </div>
+            <div class="list-header">
+                <h2 id="list-title">Список желаний</h2>
+                <button id="refresh" class="button" type="button">Обновить</button>
+            </div>
+            <div id="loading" class="loading" role="status" hidden>
+                <span class="spinner" aria-hidden="true"></span>
+                <span id="loading-text">Загрузка…</span>
+            </div>
+            <div id="wish-list" class="wish-list" aria-busy="false"></div>
+            <div id="empty" class="empty" hidden>
+                <strong>Пока здесь пусто</strong>
+                Добавьте первое желание через форму.
+            </div>
+        </section>
+    </div>
+    <noscript>Для работы списка желаний необходимо включить JavaScript.</noscript>
+</main>
+
+<template id="wish-template">
+    <article class="wish-card">
+        <div class="wish-heading">
+            <h3 class="wish-title"></h3>
+            <span class="badge"></span>
+        </div>
+        <a class="wish-link" target="_blank" rel="noopener noreferrer">Открыть товар ↗</a>
+        <div class="wish-details">
+            <span class="wish-price"></span>
+            <time class="wish-date"></time>
+        </div>
+        <div class="wish-actions">
+            <button class="button toggle-button" type="button"></button>
+            <button class="button button-danger delete-button" type="button">Удалить</button>
+        </div>
+    </article>
+</template>
+
+<script>
+    "use strict";
+
+    const form = document.getElementById("wish-form");
+    const fields = document.getElementById("form-fields");
+    const titleInput = document.getElementById("title");
+    const linkInput = document.getElementById("link");
+    const priceInput = document.getElementById("price");
+    const boughtInput = document.getElementById("is-bought");
+    const list = document.getElementById("wish-list");
+    const template = document.getElementById("wish-template");
+    const notice = document.getElementById("notice");
+
+    const money = new Intl.NumberFormat("ru-RU", { style: "currency", currency: "RUB" });
+    const dateFormat = new Intl.DateTimeFormat("ru-RU", {
+        day: "numeric", month: "long", year: "numeric"
+    });
+
+    let wishes = [];
+    let busy = false;
+
+    function notify(message, isError = false) {
+        notice.textContent = message;
+        notice.classList.toggle("error", isError);
+        notice.hidden = false;
+    }
+
+    function setBusy(value, message = "Загрузка…") {
+        busy = value;
+        fields.disabled = value;
+        list.setAttribute("aria-busy", String(value));
+        document.getElementById("loading").hidden = !value;
+        document.getElementById("loading-text").textContent = message;
+        document.querySelectorAll("button").forEach(button => { button.disabled = value; });
+    }
+
+    async function perform(action, message) {
+        if (busy) return;
+        notice.hidden = true;
+        setBusy(true, message);
+        try {
+            await action();
+        } catch (error) {
+            notify(error.message || "Произошла непредвиденная ошибка.", true);
+        } finally {
+            setBusy(false);
+        }
+    }
+
+    async function request(path, options = {}) {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 15000);
+        try {
+            const response = await fetch(path, {
+                ...options,
+                headers: {
+                    "Accept": "application/json",
+                    ...(options.body ? { "Content-Type": "application/json" } : {})
+                },
+                cache: "no-store",
+                signal: controller.signal
+            });
+            const text = await response.text();
+            let data = null;
+            if (text) {
+                try {
+                    data = JSON.parse(text);
+                } catch {
+                    if (response.ok) throw new Error("API вернул некорректный JSON.");
+                }
+            }
+            if (!response.ok) {
+                const validationErrors = data?.errors
+                    ? Object.values(data.errors).flat().join(" ")
+                    : "";
+                throw new Error(validationErrors || data?.message || data?.detail ||
+                    data?.title || `Ошибка HTTP ${response.status}.`);
+            }
+            // DELETE возвращает 204 без JSON-тела.
+            return data;
+        } catch (error) {
+            if (error.name === "AbortError") {
+                throw new Error("Сервер не ответил за 15 секунд. Обновите список перед повторением операции.");
+            }
+            if (error instanceof TypeError) {
+                throw new Error("Не удалось связаться с API. Проверьте подключение и работу приложения.");
+            }
+            throw error;
+        } finally {
+            clearTimeout(timeout);
+        }
+    }
+
+    function safeUrl(value) {
+        try {
+            const url = new URL(value);
+            return ["http:", "https:"].includes(url.protocol) ? url : null;
+        } catch {
+            return null;
+        }
+    }
+
+    function render() {
+        list.replaceChildren();
+        const boughtCount = wishes.filter(wish => wish.isBought).length;
+        document.getElementById("total-count").textContent = wishes.length;
+        document.getElementById("active-count").textContent = wishes.length - boughtCount;
+        document.getElementById("bought-count").textContent = boughtCount;
+        document.getElementById("empty").hidden = wishes.length !== 0;
+
+        for (const wish of wishes) {
+            const card = template.content.firstElementChild.cloneNode(true);
+            card.classList.toggle("bought", wish.isBought);
+            // Данные API вставляем как текст, а не как HTML.
+            card.querySelector(".wish-title").textContent = wish.title;
+            card.querySelector(".badge").textContent = wish.isBought ? "✓ Куплено" : "В планах";
+            card.querySelector(".wish-price").textContent = money.format(wish.price);
+
+            const link = card.querySelector(".wish-link");
+            const url = safeUrl(wish.link);
+            if (url) {
+                link.href = url.href;
+            } else {
+                link.textContent = "Ссылка недоступна";
+                link.removeAttribute("href");
+                link.setAttribute("aria-disabled", "true");
+            }
+
+            const date = new Date(wish.createdAt);
+            const time = card.querySelector(".wish-date");
+            if (!Number.isNaN(date.getTime())) {
+                time.dateTime = date.toISOString();
+                time.textContent = `Добавлено ${dateFormat.format(date)}`;
+            }
+
+            const toggleButton = card.querySelector(".toggle-button");
+            toggleButton.textContent = wish.isBought ? "Отметить как не куплено" : "Отметить как куплено";
+            toggleButton.disabled = busy;
+            toggleButton.addEventListener("click", () => {
+                perform(async () => {
+                    // PUT требует все поля, а не только новый статус.
+                    const updated = await request(`/wishes/${wish.id}`, {
+                        method: "PUT",
+                        body: JSON.stringify({
+                            title: wish.title, link: wish.link,
+                            price: wish.price, isBought: !wish.isBought
+                        })
+                    });
+                    wishes = wishes.map(item => item.id === wish.id ? updated : item);
+                    render();
+                    notify("Статус желания обновлён.");
+                }, "Обновление статуса…");
+            });
+
+            const deleteButton = card.querySelector(".delete-button");
+            deleteButton.disabled = busy;
+            deleteButton.addEventListener("click", () => {
+                if (busy || !confirm(`Удалить желание «${wish.title}»?`)) return;
+                perform(async () => {
+                    await request(`/wishes/${wish.id}`, { method: "DELETE" });
+                    wishes = wishes.filter(item => item.id !== wish.id);
+                    render();
+                    notify("Желание удалено.");
+                }, "Удаление желания…");
+            });
+            list.append(card);
+        }
+    }
+
+    async function loadWishes() {
+        const data = await request("/wishes");
+        if (!Array.isArray(data)) throw new Error("API должен возвращать массив желаний.");
+        wishes = data;
+        render();
+    }
+
+    titleInput.addEventListener("input", () => { titleInput.setCustomValidity(""); });
+    linkInput.addEventListener("input", () => { linkInput.setCustomValidity(""); });
+
+    form.addEventListener("submit", event => {
+        event.preventDefault();
+        if (busy) return;
+        const title = titleInput.value.trim();
+        const link = linkInput.value.trim();
+        titleInput.setCustomValidity(title ? "" : "Введите название желания.");
+        linkInput.setCustomValidity(safeUrl(link) ? "" : "Укажите корректную ссылку HTTP или HTTPS.");
+        if (!form.reportValidity()) return;
+        const price = priceInput.valueAsNumber;
+        if (!Number.isFinite(price) || price < 0) {
+            notify("Укажите корректную неотрицательную цену.", true);
+            return;
+        }
+        perform(async () => {
+            const created = await request("/wishes", {
+                method: "POST",
+                body: JSON.stringify({ title, link, price, isBought: boughtInput.checked })
+            });
+            wishes.unshift(created);
+            form.reset();
+            render();
+            notify("Желание добавлено.");
+        }, "Добавление желания…");
+    });
+
+    document.getElementById("refresh").addEventListener("click", () => {
+        perform(loadWishes, "Загрузка желаний…");
+    });
+
+    perform(loadWishes, "Загрузка желаний…");
+</script>
+</body>
+</html>

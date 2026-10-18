@@ -1,0 +1,13 @@
+C:\Users\victo\OneDrive\Документы\ОНИТ_ЛР1\app\bin\Release\net8.0\publish\Wishlist.Api.exe
+C:\Users\victo\OneDrive\Документы\ОНИТ_ЛР1\app\bin\Release\net8.0\publish\appsettings.json
+C:\Users\victo\OneDrive\Документы\ОНИТ_ЛР1\app\bin\Release\net8.0\publish\Wishlist.Api.dll
+C:\Users\victo\OneDrive\Документы\ОНИТ_ЛР1\app\bin\Release\net8.0\publish\Wishlist.Api.runtimeconfig.json
+C:\Users\victo\OneDrive\Документы\ОНИТ_ЛР1\app\bin\Release\net8.0\publish\Wishlist.Api.pdb
+C:\Users\victo\OneDrive\Документы\ОНИТ_ЛР1\app\bin\Release\net8.0\publish\Microsoft.EntityFrameworkCore.dll
+C:\Users\victo\OneDrive\Документы\ОНИТ_ЛР1\app\bin\Release\net8.0\publish\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\victo\OneDrive\Документы\ОНИТ_ЛР1\app\bin\Release\net8.0\publish\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\victo\OneDrive\Документы\ОНИТ_ЛР1\app\bin\Release\net8.0\publish\Npgsql.dll
+C:\Users\victo\OneDrive\Документы\ОНИТ_ЛР1\app\bin\Release\net8.0\publish\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\Users\victo\OneDrive\Документы\ОНИТ_ЛР1\app\bin\Release\net8.0\publish\Prometheus.NetStandard.dll
+C:\Users\victo\OneDrive\Документы\ОНИТ_ЛР1\app\bin\Release\net8.0\publish\Prometheus.AspNetCore.dll
+C:\Users\victo\OneDrive\Документы\ОНИТ_ЛР1\app\bin\Release\net8.0\publish\Wishlist.Api.deps.json

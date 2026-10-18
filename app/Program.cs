@@ -28,7 +28,9 @@ using (var scope = app.Services.CreateScope())
 app.UseHttpMetrics();
 app.UseMetricServer();
 
-app.MapGet("/", () => Results.Redirect("/wishes"));
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.MapWishEndpoints();
 app.MapHealthEndpoint();
 
