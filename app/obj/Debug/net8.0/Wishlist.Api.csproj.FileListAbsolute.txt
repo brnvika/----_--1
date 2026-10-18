@@ -102,3 +102,4 @@ C:\Users\victo\OneDrive\Документы\ОНИТ_ЛР1\app\obj\Debug\net8.0\r
 C:\Users\victo\OneDrive\Документы\ОНИТ_ЛР1\app\obj\Debug\net8.0\Wishlist.Api.pdb
 C:\Users\victo\OneDrive\Документы\ОНИТ_ЛР1\app\obj\Debug\net8.0\Wishlist.Api.genruntimeconfig.cache
 C:\Users\victo\OneDrive\Документы\ОНИТ_ЛР1\app\obj\Debug\net8.0\ref\Wishlist.Api.dll
+C:\Users\victo\OneDrive\Документы\ОНИТ_ЛР1\app\obj\Debug\net8.0\Wishlist.Api.sourcelink.json
