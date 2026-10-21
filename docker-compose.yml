@@ -39,7 +39,8 @@ services:
 
   prometheus:
     image: prom/prometheus:v2.54.1
-    user: "65534:65534"
+    # Docker Desktop в этой среде не распознаёт встроенного пользователя nobody.
+    user: "root"
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--storage.tsdb.path=/prometheus"
@@ -55,7 +56,8 @@ services:
 
   grafana:
     image: grafana/grafana:11.2.0
-    user: "65534:65534"
+    # Запуск от root нужен для доступа к именованному volume на Docker Desktop.
+    user: "root"
     environment:
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: admin
